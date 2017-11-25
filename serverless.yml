@@ -1,0 +1,99 @@
+service:
+  name: module-template
+
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  environment:
+    DYNAMO_TABLE: dynamo-table-${self:service}-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMO_TABLE}"
+
+functions:
+  module-post:
+    handler: module/handler.post
+    environment:
+      DYNAMO_TABLE: ${self:provider.environment.DYNAMO_TABLE}
+    events:
+      - http:
+          method: post
+          path: module
+          cors: true
+
+  module-del:
+    handler: module/handler.del
+    environment:
+      DYNAMO_TABLE: ${self:provider.environment.DYNAMO_TABLE}
+    events:
+      - http:
+          method: delete
+          path: module/{id}
+          cors: true
+
+  module-get:
+    handler: module/handler.get
+    environment:
+      DYNAMO_TABLE: ${self:provider.environment.DYNAMO_TABLE}
+    events:
+      - http:
+          method: get
+          path: module/{id}
+          cors: true
+
+  # module-list:
+  #   handler: module/handler.list
+  #   environment:
+  #     DYNAMO_TABLE: ${self:provider.environment.DYNAMO_TABLE}
+  #   events:
+  #     - http:
+  #         method: get
+  #         path: module
+  #         cors: true
+
+  module-put:
+    handler: module/handler.put
+    environment:
+      DYNAMO_TABLE: ${self:provider.environment.DYNAMO_TABLE}
+    events:
+      - http:
+          method: put
+          path: module
+          cors: true
+
+resources:
+  Resources:
+    DynamoTable:
+      Type: AWS::DynamoDB::Table
+      # NOTE: If you are testing and have deletion policy on during a serverless remove, you must manually delete the table before re-deploying.
+      # DeletionPolicy: Retain # Keeps around the DynamoDB resource when we redeploy/destroy
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+          -
+            AttributeName: createTime
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+          -
+            AttributeName: createTime
+            KeyType: RANGE
+
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMO_TABLE}
