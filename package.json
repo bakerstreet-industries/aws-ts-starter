@@ -1,0 +1,44 @@
+{
+  "name": "aws-ts-starter",
+  "version": "1.0.0",
+  "description": "AWS Serverless typescript starter kit using webpack",
+  "scripts": {
+    "test": "npm run deploy-functions && npm run testo",
+    "testo": "mocha -r ts-node/register **/*.spec.ts",
+    "deploy-functions": "npm run deploy-post && npm run deploy-delete && npm run deploy-get && npm run deploy-put",
+    "deploy-post": "serverless deploy --function module-post",
+    "deploy-delete": "serverless deploy --function module-delete",
+    "deploy-get": "serverless deploy --function module-get",
+    "deploy-put": "serverless deploy --function module-put"
+  },
+  "author": "Russ Watson",
+  "repository": {
+    "url": "https://github.com/bakerstreet-industries/aws-ts-starter.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "inversify": "^4.5.1",
+    "reflect-metadata": "^0.1.10",
+    "rich-logger-decorator": "github:Roustalski/rich-logger-decorator",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "0.0.20",
+    "@types/aws-sdk": "^2.7.0",
+    "@types/chai": "^4.0.4",
+    "@types/inversify": "^2.0.33",
+    "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.51",
+    "@types/reflect-metadata": "0.0.5",
+    "@types/supertest": "^2.0.3",
+    "@types/uuid": "^3.4.3",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "serverless-webpack": "^3.0.0",
+    "supertest": "^3.0.0",
+    "ts-loader": "^2.3.7",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1",
+    "webpack": "^3.6.0"
+  }
+}
