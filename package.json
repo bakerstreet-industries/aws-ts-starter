@@ -4,12 +4,29 @@
   "description": "AWS Serverless typescript starter kit using webpack",
   "scripts": {
     "test": "npm run deploy-functions && npm run testo",
-    "testo": "mocha -r ts-node/register **/*.spec.ts",
-    "deploy-functions": "npm run deploy-post && npm run deploy-delete && npm run deploy-get && npm run deploy-put",
+    "testo": "nyc mocha **/*.spec.ts",
+    "deploy-functions": "npm run deploy-post && npm run deploy-del && npm run deploy-get && npm run deploy-put",
     "deploy-post": "serverless deploy --function module-post",
-    "deploy-delete": "serverless deploy --function module-delete",
+    "deploy-del": "serverless deploy --function module-del",
     "deploy-get": "serverless deploy --function module-get",
     "deploy-put": "serverless deploy --function module-put"
+  },
+  "nyc": {
+    "include": [
+      "module/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
   },
   "author": "Russ Watson",
   "repository": {
@@ -34,7 +51,9 @@
     "@types/uuid": "^3.4.3",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
     "serverless-webpack": "^3.0.0",
+    "source-map-support": "^0.5.0",
     "supertest": "^3.0.0",
     "ts-loader": "^2.3.7",
     "ts-node": "^3.3.0",

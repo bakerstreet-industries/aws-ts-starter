@@ -32,7 +32,7 @@ describe('Model Module CRUD', () => {
             chai.expect(model1.sampleProp).to.be.equal("Cool.");
             chai.expect(model1).to.contain.keys("id", "createTime");
 
-        }).then(() =>
+        }).then(() => {
             createModel({
                 sampleProp: 'Nice!'
             }).then(p => {
@@ -42,10 +42,8 @@ describe('Model Module CRUD', () => {
                 chai.expect(model2).to.contain.keys("id", "createTime");
 
                 done();
-            })
-            ).catch(reason => {
-                throw new Error('Wha?');
-            })
+            });
+        });
     });
 
 
