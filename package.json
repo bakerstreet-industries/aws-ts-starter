@@ -42,9 +42,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "0.0.20",
-    "@types/aws-sdk": "^2.7.0",
     "@types/chai": "^4.0.4",
-    "@types/inversify": "^2.0.33",
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.0.51",
     "@types/reflect-metadata": "0.0.5",
