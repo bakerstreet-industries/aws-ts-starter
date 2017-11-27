@@ -3,7 +3,7 @@ import { agent, Request } from "supertest";
 import { IModel } from "../module/models";
 
 // NOTE: Make sure the URL ends with a trailing slash
-const request = agent("[[ENDPOINT]]");
+const request = agent("undefined/");
 
 function createModel(data: IModel): Promise<IModel> {
     return new Promise(resolve => {

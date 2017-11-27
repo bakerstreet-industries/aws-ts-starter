@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "AWS Serverless typescript starter kit using webpack",
   "scripts": {
+    "postinstall": "./postinstall.sh",
     "test": "npm run deploy-functions && npm run testo",
     "testo": "nyc mocha **/*.spec.ts",
     "deploy-functions": "npm run deploy-post && npm run deploy-del && npm run deploy-get && npm run deploy-put",
@@ -50,6 +51,8 @@
     "@types/supertest": "^2.0.3",
     "@types/uuid": "^3.4.3",
     "chai": "^4.1.2",
+    "gulp": "^3.9.1",
+    "gulp-string-replace": "^0.4.0",
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
     "serverless": "^1.24.1",
