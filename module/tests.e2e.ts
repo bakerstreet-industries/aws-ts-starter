@@ -3,6 +3,7 @@ import { agent, Request } from "supertest";
 import { IModel } from "../module/models";
 
 // NOTE: Make sure the URL ends with a trailing slash
+// npm run e2e
 const request = agent("[[ENDPOINT]]");
 
 function createModel(data: IModel): Promise<IModel> {

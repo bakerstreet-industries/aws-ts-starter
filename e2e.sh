@@ -11,4 +11,4 @@ echo "${endpoint}"
 gulp --endpoint ${endpoint}
 
 # Run the integration tests
-npm run testo
+npm run e2e

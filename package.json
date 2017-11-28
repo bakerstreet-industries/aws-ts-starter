@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "AWS Serverless typescript starter kit using webpack",
   "scripts": {
-    "postinstall": "./postinstall.sh",
-    "test": "npm run deploy-functions && npm run testo",
-    "testo": "nyc mocha **/*.spec.ts",
+    "test": "nyc mocha **/*.spec.ts",
+    "e2e": "npm run deploy-functions && npm run testo",
+    "testo": "nyc mocha **/*.e2e.ts",
     "deploy-functions": "npm run deploy-post && npm run deploy-del && npm run deploy-get && npm run deploy-put",
     "deploy-post": "serverless deploy --function module-post",
     "deploy-del": "serverless deploy --function module-del",
