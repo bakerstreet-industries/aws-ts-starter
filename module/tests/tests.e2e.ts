@@ -4,7 +4,7 @@ import { IModel } from "../module/models";
 
 // NOTE: Make sure the URL ends with a trailing slash
 // npm run e2e
-const request = agent("[[ENDPOINT]]");
+const request = agent("https://ckow4s3xx4.execute-api.us-east-1.amazonaws.com/dev/module/");
 
 function createModel(data: IModel): Promise<IModel> {
     return new Promise(resolve => {

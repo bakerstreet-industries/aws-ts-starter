@@ -1,13 +1,13 @@
+import log from "logger-decorator";
 import { DynamoDB } from "aws-sdk";
 import { injectable, unmanaged } from "inversify";
-import { ClassLogger } from "rich-logger-decorator";
 import { LambdaError } from "./errors";
 import uuid = require("uuid");
 
 let ddb = new DynamoDB();
 let _documentClient = new DynamoDB.DocumentClient();
 
-@ClassLogger()
+@log()
 @injectable()
 export class Table {
     constructor(

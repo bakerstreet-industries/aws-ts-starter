@@ -30,8 +30,8 @@
   "license": "MIT",
   "dependencies": {
     "inversify": "^4.5.1",
+    "logger-decorator": "^1.0.3",
     "reflect-metadata": "^0.1.10",
-    "rich-logger-decorator": "github:Roustalski/rich-logger-decorator",
     "uuid": "^3.1.0"
   },
   "devDependencies": {

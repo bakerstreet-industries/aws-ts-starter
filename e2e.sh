@@ -13,7 +13,7 @@ gulp --endpoint ${endpoint}
 serverless deploy --function module-post
 serverless deploy --function module-del
 serverless deploy --function module-get
-serverless deploy --function module-pu
+serverless deploy --function module-put
 
 # Run the integration tests
 nyc mocha **/*.e2e.ts

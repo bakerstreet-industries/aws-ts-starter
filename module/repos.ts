@@ -1,6 +1,6 @@
 import "reflect-metadata";
+import log from "logger-decorator";
 import { injectable } from "inversify";
-import { ClassLogger } from "rich-logger-decorator";
 import { Table } from "../utils/dynamo-table";
 import { config } from "../appsettings";
 import { IModel } from "./models";
@@ -13,7 +13,7 @@ export interface IModuleRepo {
     put(model: IModel): Promise<IModel>;
 }
 
-@ClassLogger()
+@log()
 @injectable()
 export class ModuleRepo extends Table implements IModuleRepo {
 

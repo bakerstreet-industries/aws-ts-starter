@@ -1,8 +1,8 @@
-import { MODULE_TYPES } from './models';
-import { IModuleRepo } from './repos';
+import { MODULE_TYPES } from '../models';
+import { IModuleRepo } from '../repos';
 import chai = require("chai");
-import container from "./container";
-import { IModel } from "../module/models";
+import container from "../container";
+import { IModel } from "../../module/models";
 
 
 class MockModuleRepo implements IModuleRepo {
@@ -33,7 +33,7 @@ container.rebind<IModuleRepo>(MODULE_TYPES.IModuleRepo).to(MockModuleRepo);
 
 describe('Model Module CRUD', () => {
 
-    before(() => {
+    it("Should test something", () => {
         chai.expect(true).to.be.equal(false);
     });
 

@@ -1,5 +1,5 @@
+import log from "logger-decorator";
 import { inject, injectable } from "inversify";
-import { ClassLogger } from "rich-logger-decorator";
 import { MODULE_TYPES, IModel } from "./models";
 import { IModuleRepo } from "./repos";
 import { LambdaError } from "../utils/errors";
@@ -12,7 +12,7 @@ export interface IModuleService {
     put(model: IModel): Promise<IModel>;
 }
 
-@ClassLogger()
+@log()
 @injectable()
 export class ModuleService implements IModuleService {
 
