@@ -1,7 +1,7 @@
 import "reflect-metadata";
-import log from "logger-decorator";
 import { injectable } from "inversify";
 import { Table } from "../utils/dynamo-table";
+import log from "ts-log-class";
 import { config } from "../appsettings";
 import { IModel } from "./models";
 

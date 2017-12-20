@@ -30,8 +30,8 @@
   "license": "MIT",
   "dependencies": {
     "inversify": "^4.5.1",
-    "logger-decorator": "^1.0.3",
     "reflect-metadata": "^0.1.10",
+    "ts-log-class": "^1.0.8",
     "uuid": "^3.1.0"
   },
   "devDependencies": {

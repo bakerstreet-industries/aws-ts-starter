@@ -1,4 +1,4 @@
-import log from "logger-decorator";
+import log from "ts-log-class";
 import { inject, injectable } from "inversify";
 import { MODULE_TYPES, IModel } from "./models";
 import { IModuleRepo } from "./repos";

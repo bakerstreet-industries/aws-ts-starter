@@ -1,7 +1,7 @@
-import log from "logger-decorator";
 import { DynamoDB } from "aws-sdk";
 import { injectable, unmanaged } from "inversify";
 import { LambdaError } from "./errors";
+import log from "ts-log-class";
 import uuid = require("uuid");
 
 let ddb = new DynamoDB();
