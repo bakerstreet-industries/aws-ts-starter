@@ -16,4 +16,4 @@ serverless deploy --function module-get
 serverless deploy --function module-put
 
 # Run the integration tests
-nyc mocha **/*.e2e.ts
+nyc mocha **/e2e.ts
