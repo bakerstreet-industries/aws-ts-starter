@@ -13,7 +13,7 @@ module.exports = {
     ]
   },
   output: {
-    libraryTarget: 'commonjs',
+    libraryTarget: 'umd',
     path: path.join(__dirname, '.webpack'),
     filename: '[name].js',
   },
