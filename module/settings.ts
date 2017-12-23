@@ -11,6 +11,20 @@ function getVar(name: string): string {
     return defaults[name];
 }
 
-export const config = {
-    DYNAMO_TABLE: getVar('DYNAMO_TABLE')
+export interface IAppSettings {
+    table: IDynamoSettings;
+}
+
+export interface IDynamoSettings {
+    name: string;
+    addTimestamps: boolean;
+    idFields: string[];
+}
+
+export const APP_SETTINGS: IAppSettings = {
+    table: {
+        addTimestamps: true,
+        idFields: ['id'],
+        name: getVar('DYNAMO_TABLE'),
+    }
 };

@@ -1,6 +1,7 @@
 import { Context, APIGatewayEvent } from "aws-lambda";
 
 export const MODULE_TYPES = {
+    IAppSettings: Symbol("IAppSettings"),
     IModuleService: Symbol("IModuleService"),
     IModuleRepo: Symbol("IModuleRepo")
 };

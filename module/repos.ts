@@ -1,9 +1,9 @@
 import "reflect-metadata";
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import { Table } from "../utils/dynamo-table";
 import log from "ts-log-class";
-import { config } from "../appsettings";
-import { IModel } from "./models";
+import { IAppSettings } from "./settings";
+import { IModel, MODULE_TYPES } from "./models";
 
 export interface IModuleRepo {
     post(model: IModel): Promise<IModel>;
@@ -17,8 +17,14 @@ export interface IModuleRepo {
 @injectable()
 export class ModuleRepo extends Table implements IModuleRepo {
 
-    constructor() {
-        super(config.DYNAMO_TABLE, true, ['id']);
+    constructor(
+        @inject(MODULE_TYPES.IAppSettings) settings: IAppSettings
+    ) {
+        super(
+            settings.table.name,
+            settings.table.addTimestamps,
+            settings.table.idFields
+        );
     }
 
     post(model: IModel): Promise<IModel> {
