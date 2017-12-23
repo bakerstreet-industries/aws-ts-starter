@@ -1,9 +1,11 @@
-import { Context, APIGatewayEvent } from "aws-lambda";
+import { APIGatewayEvent } from "aws-lambda";
 
 export const MODULE_TYPES = {
     IAppSettings: Symbol("IAppSettings"),
+    IDynamoDBDocumentClient: Symbol("IDynamoDBDocumentClient"),
+    IDynamoTable: Symbol("IDynamoClient"),
     IModuleService: Symbol("IModuleService"),
-    IModuleRepo: Symbol("IModuleRepo")
+    IModuleRepo: Symbol("IModuleRepo"),
 };
 
 export interface IGetRequest extends APIGatewayEvent {

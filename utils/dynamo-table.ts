@@ -1,39 +1,57 @@
-import { DynamoDB } from "aws-sdk";
-import { injectable, unmanaged } from "inversify";
-import { LambdaError } from "./errors";
 import log from "ts-log-class";
 import uuid = require("uuid");
+import { injectable, inject } from "inversify";
+import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
+import { AWSError } from "aws-sdk/lib/error";
+import { Request } from "aws-sdk/lib/request";
+import { MODULE_TYPES } from './../module/models';
+import { LambdaError } from "./errors";
+import { IAppSettings } from "../module/settings";
 
-let ddb = new DynamoDB();
-let _documentClient = new DynamoDB.DocumentClient();
+export interface IDynamoDBDocumentClient {
+    delete(params: DocumentClient.DeleteItemInput, callback?: (err: AWSError, data: DocumentClient.DeleteItemOutput) => void): Request<DocumentClient.DeleteItemOutput, AWSError>;
+    query(params: DocumentClient.QueryInput, callback?: (err: AWSError, data: DocumentClient.QueryOutput) => void): Request<DocumentClient.QueryOutput, AWSError>;
+    put(params: DocumentClient.PutItemInput, callback?: (err: AWSError, data: DocumentClient.PutItemOutput) => void): Request<DocumentClient.PutItemOutput, AWSError>;
+
+    // delete(...rest): any;
+    // query(...rest): any;
+    // put(...rest): any;
+}
+
+export interface IDynamoTable {
+    delete(key: { [name: string]: any }): Promise<any>;
+    get(keyConditionExpression: string, expressionAttributeValues: { [name: string]: any }): Promise<any>;
+    put(data: any): Promise<any>;
+}
 
 @log()
 @injectable()
-export class Table {
+export class DynamoTableWrapper implements IDynamoTable {
+
     constructor(
-        @unmanaged() private _tableName: string,
-        @unmanaged() private _timestamps: boolean = true,
-        @unmanaged() private _uuidFields: string[] = []
+        @inject(MODULE_TYPES.IAppSettings) private _settings: IAppSettings,
+        @inject(MODULE_TYPES.IDynamoDBDocumentClient) private _documentClient: IDynamoDBDocumentClient
     ) { }
 
-    protected internalDelete(key: { [name: string]: any }): Promise<any> {
+    delete(key: { [name: string]: any }): Promise<any> {
         return new Promise((resolve, reject) => {
-            _documentClient.delete({
-                TableName: this._tableName,
+            this._documentClient.delete({
+                TableName: this._settings.table.name,
                 Key: key
             }, (err) => {
                 if (err) {
                     reject(LambdaError.deleteDataFailed(err));
+                } else {
+                    resolve();
                 }
-                resolve();
             });
         });
     }
 
-    protected internalGet(keyConditionExpression: string, expressionAttributeValues: { [name: string]: any }): Promise<any> {
+    get(keyConditionExpression: string, expressionAttributeValues: { [name: string]: any }): Promise<any> {
         return new Promise((resolve, reject) => {
-            _documentClient.query({
-                TableName: this._tableName,
+            this._documentClient.query({
+                TableName: this._settings.table.name,
                 KeyConditionExpression: keyConditionExpression,
                 ExpressionAttributeValues: expressionAttributeValues
             }, (err, data) => {
@@ -46,12 +64,12 @@ export class Table {
         });
     }
 
-    protected internalPut(data): Promise<any> {
-        this._uuidFields.forEach((field) => {
-            // If provided don't create an UUID on the property that is marked for auto uuid.
+    put(data): Promise<any> {
+        // If provided don't create a UUID on the property that is marked for auto uuid.
+        this._settings.table.idFields.forEach((field) => {
             data[field] = data[field] || uuid.v1();
         });
-        if (this._timestamps) {
+        if (this._settings.table.addTimestamps) {
             if (data.createTime) {
                 data.updateTime = Date.now();
             } else {
@@ -59,8 +77,8 @@ export class Table {
             }
         }
         return new Promise((resolve, reject) => {
-            _documentClient.put({
-                TableName: this._tableName,
+            this._documentClient.put({
+                TableName: this._settings.table.name,
                 Item: data
             }, (err) => {
                 if (err) {
@@ -73,10 +91,10 @@ export class Table {
     }
 
     // Dynamo DB scans are EXPENSIVE - avoid doing this.
-    // protected internalScan(): Promise<any[]> {
+    // protected scan(): Promise<any[]> {
     //     return new Promise((resolve, reject) => {
-    //         _documentClient.scan({
-    //             TableName: this._tableName,
+    //         this._documentClient.scan({
+    //             TableName: this._settings.dynamoTable.name,
     //             ConsistentRead: true
     //         }, (err, data) => {
     //             if (err) {

@@ -1,8 +1,8 @@
 import "reflect-metadata";
-import { injectable, inject } from "inversify";
-import { Table } from "../utils/dynamo-table";
 import log from "ts-log-class";
+import { injectable, inject } from "inversify";
 import { IAppSettings } from "./settings";
+import { IDynamoTable } from './../utils/dynamo-table';
 import { IModel, MODULE_TYPES } from "./models";
 
 export interface IModuleRepo {
@@ -15,40 +15,34 @@ export interface IModuleRepo {
 
 @log()
 @injectable()
-export class ModuleRepo extends Table implements IModuleRepo {
+export class ModuleRepo implements IModuleRepo {
 
     constructor(
-        @inject(MODULE_TYPES.IAppSettings) settings: IAppSettings
-    ) {
-        super(
-            settings.table.name,
-            settings.table.addTimestamps,
-            settings.table.idFields
-        );
-    }
+        @inject(MODULE_TYPES.IDynamoTable) private _table: IDynamoTable
+    ) {}
 
     post(model: IModel): Promise<IModel> {
-        return super.internalPut(model);
+        return this._table.put(model);
     }
 
     get(id: string): Promise<IModel> {
-        return super.internalGet('id = :id', { ':id': id })
+        return this._table.get('id = :id', { ':id': id })
             .then(items => items[0]);
     }
 
     // list(): Promise<IModel[]> {
-    //     return super.internalScan();
+    //     return this._table.Scan();
     // }
 
     del(id: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.get(id).then(
-                model => super.internalDelete({ id: model.id, createTime: model.createTime })
+                model => this._table.delete({ id: model.id, createTime: model.createTime })
             ).then(() => resolve());
         });
     }
 
     put(model: IModel): Promise<IModel> {
-        return super.internalPut(model);
+        return this._table.put(model);
     }
 }
