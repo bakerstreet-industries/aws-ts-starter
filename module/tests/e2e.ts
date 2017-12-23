@@ -148,6 +148,6 @@ describe('Model Module CRUD', () => {
                     .send()
                 )
                 .then(() => done());
-        });
+        }).timeout(10000);
     });
 });
