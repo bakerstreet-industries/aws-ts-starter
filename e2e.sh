@@ -13,4 +13,4 @@ then
 fi
 
 # Run the integration tests
-nyc mocha **/e2e.ts
+nyc mocha **/e2e.ts --timeout 10000
