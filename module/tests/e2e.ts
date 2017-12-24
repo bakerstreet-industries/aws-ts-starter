@@ -7,13 +7,18 @@ import { IModel } from "../../module/models";
 const request = agent("[[ENDPOINT]]");
 
 function createModel(data: IModel): Promise<IModel> {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         request
             .post('')
             .send(data)
             .set('accept', 'json')
             .expect(200)
             .end((err, res) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
                 resolve(res.body);
             });
     });

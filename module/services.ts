@@ -55,7 +55,7 @@ export class ModuleService implements IModuleService {
 
     private validate(model: IModel): void {
         if (model === null || model === undefined) {
-            throw new LambdaError(400, "Cannot post a null or undefined model.", "Request Error");
+            throw new LambdaError(400, "Model updates require a model that is not null or undefined.", "Request Error");
         }
     }
 
