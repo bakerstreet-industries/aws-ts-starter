@@ -36,7 +36,7 @@ export class ModuleRepo implements IModuleRepo {
     del(id: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.get(id).then(
-                model => this._table.delete({ id: model.id, createTime: model.createTime })
+                model => this._table.del({ id: model.id, createTime: model.createTime })
             ).then(() => resolve());
         });
     }

@@ -18,7 +18,7 @@ export interface IDynamoDBDocumentClient {
 }
 
 export interface IDynamoTable {
-    delete(key: { [name: string]: any }): Promise<any>;
+    del(key: { [name: string]: any }): Promise<any>;
     get(keyConditionExpression: string, expressionAttributeValues: { [name: string]: any }): Promise<any>;
     put(data: any): Promise<any>;
 }
@@ -26,15 +26,15 @@ export interface IDynamoTable {
 @log()
 //AHHHH - YUNO WORKY?!
 //module initialization error: TypeError at /var/task/module/handler.js:2511:21 at __decorate (/var/task/module/handler.js:1228:95) at /var/task/module/handler.js:1297:26 at Object.defineProperty.value (/var/task/module/handler.js:1303:2) at __webpack_require__ (/var/task/module/handler.js:30:30) at Object.c (/var/task/module/handler.js:1201:22) at __webpack_require__ (/v
-//@injectable()
+@injectable()
 export class DynamoTableWrapper implements IDynamoTable {
 
     constructor(
-        /* @inject(MODULE_TYPES.IAppSettings) */ private _settings: IAppSettings,
-        /* @inject(MODULE_TYPES.IDynamoDBDocumentClient) */ private _documentClient: IDynamoDBDocumentClient
+        @inject(MODULE_TYPES.IAppSettings) private _settings: IAppSettings,
+        @inject(MODULE_TYPES.IDynamoDBDocumentClient) private _documentClient: IDynamoDBDocumentClient
     ) { }
 
-    delete(key: { [name: string]: any }): Promise<any> {
+    del(key: { [name: string]: any }): Promise<any> {
         return new Promise((resolve, reject) => {
             this._documentClient.delete({
                 TableName: this._settings.table.name,
