@@ -1,3 +1,5 @@
+import { IAppSettings } from "./models";
+
 
 let defaults = {
     DYNAMO_TABLE: "dynamo-table"
@@ -9,16 +11,6 @@ function getVar(name: string): string {
         return process.env[name];
     }
     return defaults[name];
-}
-
-export interface IAppSettings {
-    table: IDynamoSettings;
-}
-
-export interface IDynamoSettings {
-    name: string;
-    addTimestamps: boolean;
-    idFields: string[];
 }
 
 export const APP_SETTINGS: IAppSettings = {
