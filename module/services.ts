@@ -1,5 +1,5 @@
+import log from "ts-log-class";
 import { inject, injectable } from "inversify";
-import { ClassLogger } from "rich-logger-decorator";
 import { MODULE_TYPES, IModel } from "./models";
 import { IModuleRepo } from "./repos";
 import { LambdaError } from "../utils/errors";
@@ -12,7 +12,7 @@ export interface IModuleService {
     put(model: IModel): Promise<IModel>;
 }
 
-@ClassLogger()
+@log()
 @injectable()
 export class ModuleService implements IModuleService {
 
@@ -21,6 +21,7 @@ export class ModuleService implements IModuleService {
     ) { }
 
     public post(model: IModel): Promise<IModel> {
+        this.validate(model);
         if (model.id) {
             return this.get(model.id).then(
                 () => this.put(model)
@@ -46,9 +47,16 @@ export class ModuleService implements IModuleService {
     }
 
     public put(model: IModel): Promise<IModel> {
+        this.validate(model);
         return this.get(model.id).then(
             () => this._repo.put(model)
         );
+    }
+
+    private validate(model: IModel): void {
+        if (model === null || model === undefined) {
+            throw new LambdaError(400, "Model updates require a model that is not null or undefined.", "Request Error");
+        }
     }
 
 }

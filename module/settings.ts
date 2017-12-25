@@ -1,3 +1,5 @@
+import { IAppSettings } from "./models";
+
 
 let defaults = {
     DYNAMO_TABLE: "dynamo-table"
@@ -11,6 +13,10 @@ function getVar(name: string): string {
     return defaults[name];
 }
 
-export const config = {
-    DYNAMO_TABLE: getVar('DYNAMO_TABLE')
+export const APP_SETTINGS: IAppSettings = {
+    table: {
+        addTimestamps: true,
+        idFields: ['id'],
+        name: getVar('DYNAMO_TABLE'),
+    }
 };

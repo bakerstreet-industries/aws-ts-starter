@@ -3,17 +3,14 @@
   "version": "1.0.0",
   "description": "AWS Serverless typescript starter kit using webpack",
   "scripts": {
-    "test": "nyc mocha **/*.e2e.ts",
-    "deploy:test": "npm run deploy-functions && npm test",
-    "deploy-functions": "npm run deploy-post && npm run deploy-del && npm run deploy-get && npm run deploy-put",
-    "deploy-post": "serverless deploy --function module-post",
-    "deploy-del": "serverless deploy --function module-del",
-    "deploy-get": "serverless deploy --function module-get",
-    "deploy-put": "serverless deploy --function module-put"
+      "test": "nyc mocha **/*.unit.ts",
+      "test:e2e": "nyc mocha **/e2e.ts --timeout 10000",
+      "test:e2e:deploy": "./e2e.sh"
   },
   "nyc": {
     "include": [
-      "module/*.ts"
+      "module/*.ts",
+      "utils/*.ts"
     ],
     "extension": [
       ".ts"
@@ -36,7 +33,7 @@
   "dependencies": {
     "inversify": "^4.5.1",
     "reflect-metadata": "^0.1.10",
-    "rich-logger-decorator": "github:Roustalski/rich-logger-decorator",
+    "ts-log-class": "^1.0.15",
     "uuid": "^3.1.0"
   },
   "devDependencies": {

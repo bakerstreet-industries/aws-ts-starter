@@ -1,17 +1,22 @@
 import chai = require("chai");
 import { agent, Request } from "supertest";
-import { IModel } from "../module/models";
+import { IModel } from "../../module/models";
 
 const request = agent(process.env.endpoint);
 
 function createModel(data: IModel): Promise<IModel> {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         request
             .post('')
             .send(data)
             .set('accept', 'json')
             .expect(200)
             .end((err, res) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
                 resolve(res.body);
             });
     });
@@ -146,6 +151,6 @@ describe('Model Module CRUD', () => {
                     .send()
                 )
                 .then(() => done());
-        });
+        }).timeout(10000);
     });
 });
