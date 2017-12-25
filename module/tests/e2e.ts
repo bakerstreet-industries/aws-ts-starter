@@ -2,7 +2,10 @@ import chai = require("chai");
 import { agent, Request } from "supertest";
 import { IModel } from "../../module/models";
 
-const request = agent(process.env.endpoint);
+// NOTE: Make sure the URL ends with a trailing slash
+// npm run test:e2e
+const request = agent("[[ENDPOINT]]");
+
 
 function createModel(data: IModel): Promise<IModel> {
     return new Promise((resolve, reject) => {
