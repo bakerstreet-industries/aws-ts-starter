@@ -6,3 +6,4 @@ cache:
     - node_modules
 
 script: npm install && npm test && npm run test:e2e:deploy
+after_script: "nyc report --reporter=text-lcov | coveralls"
