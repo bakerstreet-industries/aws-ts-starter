@@ -15,5 +15,7 @@ fi
 # Run the integration tests
 nyc mocha **/e2e.ts --timeout 5000
 
+echo $?
+
 # Return the exit code from the last command
 exit $?
