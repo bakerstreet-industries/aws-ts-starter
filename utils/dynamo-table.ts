@@ -11,10 +11,6 @@ export interface IDynamoDBDocumentClient {
     delete(params: DocumentClient.DeleteItemInput, callback?: (err: AWSError, data: DocumentClient.DeleteItemOutput) => void): Request<DocumentClient.DeleteItemOutput, AWSError>;
     query(params: DocumentClient.QueryInput, callback?: (err: AWSError, data: DocumentClient.QueryOutput) => void): Request<DocumentClient.QueryOutput, AWSError>;
     put(params: DocumentClient.PutItemInput, callback?: (err: AWSError, data: DocumentClient.PutItemOutput) => void): Request<DocumentClient.PutItemOutput, AWSError>;
-
-    // delete(...rest): any;
-    // query(...rest): any;
-    // put(...rest): any;
 }
 
 export interface IDynamoTable {
@@ -34,7 +30,7 @@ export class DynamoTableWrapper implements IDynamoTable {
         /* @inject(MODULE_TYPES.IDynamoDBDocumentClient) */ private _documentClient: IDynamoDBDocumentClient
     ) { }
 
-    delete(key: { [name: string]: any }): Promise<any> {
+    delete(key: { [name: string]: any }): Promise<void> {
         return new Promise((resolve, reject) => {
             this._documentClient.delete({
                 TableName: this._settings.table.name,
@@ -67,9 +63,11 @@ export class DynamoTableWrapper implements IDynamoTable {
 
     put(data): Promise<any> {
         // If provided don't create a UUID on the property that is marked for auto uuid.
-        this._settings.table.idFields.forEach((field) => {
-            data[field] = data[field] || uuid.v1();
-        });
+        if (this._settings.table.idFields) {
+            this._settings.table.idFields.forEach((field) => {
+                data[field] = data[field] || uuid.v1();
+            });
+        }
         if (this._settings.table.addTimestamps) {
             if (data.createTime) {
                 data.updateTime = Date.now();
