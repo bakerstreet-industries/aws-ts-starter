@@ -45,7 +45,7 @@ describe('Model Module CRUD', () => {
             }).then(p => {
                 model2 = p;
 
-                chai.expect(model2.sampleProp).to.be.equal("Nice!");
+                chai.expect(model2.sampleProp).to.be.equal("Nice");
                 chai.expect(model2).to.contain.keys("id", "createTime");
 
                 done();
