@@ -4,5 +4,5 @@ node_js:
 cache:
   directories:
     - node_modules
-after_script:
-    - npm run test:e2e:deploy
+
+script: npm install && npm test && npm run test:e2e:deploy
