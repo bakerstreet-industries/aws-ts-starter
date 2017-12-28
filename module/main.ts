@@ -7,7 +7,7 @@ import container from "./container";
 const service = container.get<IModuleService>(Models.MODULE_TYPES.IModuleService);
 
 export function post(request: APIGatewayEvent): Promise<any> {
-    return service.post(JSON.parse(request.body));
+    return service.post(safeParse(request.body));
 }
 
 export function get(request: Models.IGetRequest): Promise<any> {
@@ -23,5 +23,13 @@ export function del(request: Models.IDeleteRequest): Promise<any> {
 }
 
 export function put(request: APIGatewayEvent): Promise<any> {
-    return service.put(JSON.parse(request.body));
+    return service.put(safeParse(request.body));
+}
+
+function safeParse(input: string): any {
+    try {
+        return JSON.parse(input);
+    } catch (err) {
+        return null;
+    }
 }
