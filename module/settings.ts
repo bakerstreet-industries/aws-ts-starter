@@ -6,11 +6,12 @@ let defaults = {
 };
 
 function getVar(name: string): string {
+    let value = defaults[name];
     if (process.env[name]) {
         console.log('Getting value', name, 'from environmental variable with value', process.env[name], ' overriding ', defaults[name]);
-        return process.env[name];
+        value = process.env[name];
     }
-    return defaults[name];
+    return value;
 }
 
 export const APP_SETTINGS: IAppSettings = {
