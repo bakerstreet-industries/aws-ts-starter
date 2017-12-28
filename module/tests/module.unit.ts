@@ -1,3 +1,4 @@
+import { LambdaError } from './../../utils/errors';
 import { MODULE_TYPES, IAppSettings } from '../models';
 import chai = require("chai");
 import container from "../container";
@@ -84,6 +85,26 @@ describe('Model Module CRUD', () => {
                 chai.expect(data.name).to.equal("whoop");
                 return data;
             })
+    });
+
+    it("Main Post with ID => Put", () => {
+        event.body = JSON.stringify({ name: "whoop", id: "123" });
+
+        return catchChaiAssertionFailures(post(event))
+            .then(data => {
+                chai.expect(data).contains.all.keys("id", "createTime");
+                chai.expect(data.name).to.equal("whoop");
+                return data;
+            })
+    });
+
+    it("Main Post null model", () => {
+        event.body = "";
+        try {
+            return post(event);
+        } catch (err) {
+            chai.expect(JSON.stringify(err)).to.equal('{"statusCode":400,"message":"Model updates require a model that is not null or undefined.","type":"Request Error"}');
+        }
     });
 
 });
