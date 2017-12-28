@@ -33,7 +33,8 @@ describe('Dynamo Table Wrapper', () => {
                 addTimestamps: true,
                 idFields: null,
                 name: "blah"
-            }
+            },
+            example: "sampleSetting"
         };
 
         mockDocumentClient = {

@@ -67,7 +67,8 @@ let settings: IAppSettings = {
         addTimestamps: true,
         idFields: ["id"],
         name: "blah"
-    }
+    },
+    example: "sampleSetting"
 }
 let dtw: DynamoTableWrapper = new DynamoTableWrapper(settings, mockDocumentClient);
 container.rebind<IDynamoTable>(MODULE_TYPES.IDynamoTable).toConstantValue(dtw);
