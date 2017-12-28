@@ -29,6 +29,7 @@ export interface IModel {
 
 export interface IAppSettings {
     table: IDynamoSettings;
+    example: string;
 }
 
 export interface IDynamoSettings {

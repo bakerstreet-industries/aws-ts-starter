@@ -126,35 +126,14 @@ describe('Model Module CRUD', () => {
     describe('Delete Tests', () => {
         it('Deletes valid Model', () => {
             return catchChaiAssertionFailures(Promise.resolve())
-                .then(() => request
-                    .delete(model1.id)
-                    .then(res => {
-                        chai.expect(res.status).to.equal(200, "Expected Status Code 200 OK - Model 1 Del");
-                        return res;
-                    })
-                )
-                .then(() => request
-                    .delete(model2.id)
-                    .then(res => {
-                        chai.expect(res.status).to.equal(200, "Expected Status Code 200 OK - Model 2 Del");
-                        return res;
-                    })
-                )
-                .then(() => request
-                    .get(model2.id)
-                    .then(res => {
-                        chai.expect(res.status).to.equal(404, "Expected Status Code 404 Not Found - Model 1 Get Check");
-                        return res;
-                    })
-                )
-                .then(() => request
-                    .get(model1.id)
-                    .send()
-                    .then(res => {
-                        chai.expect(res.status).to.equal(404, "Expected Status Code 404 Not Found - Model 2 Get Check");
-                        return res;
-                    })
-                );
+                .then(() => request.delete(model1.id))
+                .then(res => chai.expect(res.status).to.equal(200, "Expected Status Code 200 OK - Model 1 Del"))
+                .then(() => request.delete(model2.id))
+                .then(res => chai.expect(res.status).to.equal(200, "Expected Status Code 200 OK - Model 2 Del"))
+                .then(() => request.get(model2.id))
+                .then(res => chai.expect(res.status).to.equal(404, "Expected Status Code 404 Not Found - Model 1 Get Check"))
+                .then(() => request.get(model1.id).send())
+                .then(res => chai.expect(res.status).to.equal(404, "Expected Status Code 404 Not Found - Model 2 Get Check"));
         });
     });
 });

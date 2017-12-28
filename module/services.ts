@@ -7,7 +7,7 @@ import { LambdaError } from "../utils/errors";
 export interface IModuleService {
     post(model: IModel): Promise<IModel>;
     get(id: string): Promise<IModel>;
-    del(id: string);
+    del(id: string): Promise<void>;
     //list(): Promise<IModel[]>;
     put(model: IModel): Promise<IModel>;
 }

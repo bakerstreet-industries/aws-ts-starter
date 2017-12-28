@@ -2,7 +2,8 @@ import { IAppSettings } from "./models";
 
 
 let defaults = {
-    DYNAMO_TABLE: "dynamo-table"
+    DYNAMO_TABLE: "dynamo-table",
+    EXAMPLE_SETTING: "bruh"
 };
 
 function getVar(name: string): string {
@@ -19,5 +20,6 @@ export const APP_SETTINGS: IAppSettings = {
         addTimestamps: true,
         idFields: ['id'],
         name: getVar('DYNAMO_TABLE'),
-    }
+    },
+    example: getVar('EXAMPLE_SETTING')
 };

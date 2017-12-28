@@ -18,7 +18,7 @@ export function get(request: Models.IGetRequest): Promise<any> {
 //     return service.list();
 // }
 
-export function del(request: Models.IDeleteRequest): Promise<any> {
+export function del(request: Models.IDeleteRequest): Promise<void> {
     return service.del(request.pathParameters.id);
 }
 
