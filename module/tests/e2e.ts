@@ -1,10 +1,11 @@
 import chai = require("chai");
 import { agent, Request } from "supertest";
 import { IModel } from "../../module/models";
+import catchChaiAssertionFailures from "../../utils/tests/chai-assertion-catch";
 
 // NOTE: Make sure the URL ends with a trailing slash
 // npm run test:e2e
-const request = agent("[[ENDPOINT]]");
+const request = agent("https://at7a42uib6.execute-api.us-east-1.amazonaws.com/dev/module/");
 
 
 function createModel(data: IModel): Promise<IModel> {
@@ -30,59 +31,74 @@ describe('Model Module CRUD', () => {
     let model1: IModel;
     let model2: IModel;
 
-    before(done => {
-        createModel({
-            sampleProp: 'Cool.'
-        }).then(p => {
-            model1 = p;
-
-            chai.expect(model1.sampleProp).to.be.equal("Cool.");
-            chai.expect(model1).to.contain.keys("id", "createTime");
-
-        }).then(() => {
+    before(() => {
+        return catchChaiAssertionFailures(
             createModel({
-                sampleProp: 'Nice'
+                sampleProp: 'Cool.'
             }).then(p => {
-                model2 = p;
+                model1 = p;
 
-                chai.expect(model2.sampleProp).to.be.equal("Nice");
-                chai.expect(model2).to.contain.keys("id", "createTime");
+                chai.expect(model1.sampleProp).to.be.equal("Cool.");
+                chai.expect(model1).to.contain.keys("id", "createTime");
+                return p;
+            }).then(() => {
+                return createModel({
+                    sampleProp: 'Nice'
+                }).then(p => {
+                    model2 = p;
 
-                done();
-            });
-        });
+                    chai.expect(model2.sampleProp).to.be.equal("Nice");
+                    chai.expect(model2).to.contain.keys("id", "createTime");
+                    return p;
+                });
+            })
+        );
     });
 
 
     describe('Reads', () => {
 
-        it('Retrieve valid Model', (done) => {
-            request
-                .get(model1.id)
-                .expect(200)
-                .end((err, res) => {
-
-                    model1 = res.body;
-
-                    chai.expect(model1.sampleProp).to.be.equal("Cool.");
-                    chai.expect(model1).to.contain.keys("id", "createTime");
-
-                    done();
-                });
+        it('Retrieve valid Model', () => {
+            return catchChaiAssertionFailures(
+                new Promise((resolve, reject) => {
+                    request
+                        .get(model1.id)
+                        .end((err, res) => {
+                            model1 = res.body;
+                            chai.expect(res.status).to.be.equal(200);
+                            chai.expect(model1.sampleProp).to.be.equal("Cool.");
+                            chai.expect(model1).to.contain.keys("id", "createTime");
+                            resolve(model1);
+                        });
+                })
+            );
         });
 
-        it('Throw 404 not found', (done) => {
-            request
-                .get('does-not-exist')
-                .expect(404)
-                .end(done);
+        it('Throw 404 not found', () => {
+            return catchChaiAssertionFailures(
+                new Promise((resolve, reject) => {
+                    request
+                        .get('does-not-exist')
+                        .end((err, res) => {
+                            chai.expect(res.status).to.be.equal(404, "Expected Status Code 404 Not Found");
+                            resolve();
+                        });
+                })
+            );
         });
 
-        it('Throw for an invalid Model', (done) => {
-            request
-                .get('error')
-                .expect(401, '{"message":"Permission Denied","type":"Access Error"}')
-                .end(done);
+        it('Throw for an invalid Model', () => {
+            return catchChaiAssertionFailures(
+                new Promise(resolve => {
+                    request
+                        .get('error')
+                        .end((err, res) => {
+                            chai.expect(res.status).to.be.equal(401, "Expected Status Code 401 Not Authorized");
+                            chai.expect(JSON.stringify(res.body)).to.be.equal('{"message":"Permission Denied","type":"Access Error"}');
+                            resolve();
+                        });
+                })
+            );
         });
 
     });
@@ -114,46 +130,63 @@ describe('Model Module CRUD', () => {
     // });
 
     describe('Put Tests', () => {
-        it('Updates valid Model', (done) => {
-            model1.sampleProp = "updated"
-            request
-                .put('')
-                .send(model1)
-                .set('accept', 'json')
-                .expect(200)
-                .end((err, res) => {
+        it('Updates valid Model', () => {
+            return catchChaiAssertionFailures(
+                new Promise(resolve => {
+                    model1.sampleProp = "updated";
+                    request
+                        .put('')
+                        .send(model1)
+                        .set('accept', 'json')
+                        .end((err, res) => {
 
-                    model1 = res.body;
+                            model1 = res.body;
 
-                    chai.expect(model1.sampleProp).to.be.equal("updated");
-                    chai.expect(model1).to.contain.keys("id", "createTime", "updateTime");
+                            chai.expect(res.status).to.equal(200, "Expected Status Code 200 OK");
+                            chai.expect(model1.sampleProp).to.be.equal("updated");
+                            chai.expect(model1).to.contain.keys("id", "createTime", "updateTime");
 
-                    done();
-                });
+                            resolve(model1);
+                        });
+                })
+            )
         });
     });
 
     describe('Delete Tests', () => {
-        it('Deletes valid Model', (done) => {
-            Promise.resolve()
-                .then(() => request
-                    .delete(model1.id)
-                    .expect(200)
-                )
-                .then(() => request
-                    .delete(model2.id)
-                    .expect(200)
-                )
-                .then(() => request
-                    .get(model2.id)
-                    .expect(404)
-                )
-                .then(() => request
-                    .get(model1.id)
-                    .expect(404)
-                    .send()
-                )
-                .then(() => done());
-        }).timeout(10000);
+        it('Deletes valid Model', () => {
+            return catchChaiAssertionFailures(
+                Promise.resolve()
+                    .then(() => request
+                        .delete(model1.id)
+                        .then(res => {
+                            chai.expect(res.status).to.equal(200, "Expected Status Code 200 OK - Model 1 Del");
+                            return res;
+                        })
+                    )
+                    .then(() => request
+                        .delete(model2.id)
+                        .then(res => {
+                            chai.expect(res.status).to.equal(200, "Expected Status Code 200 OK - Model 2 Del");
+                            return res;
+                        })
+                    )
+                    .then(() => request
+                        .get(model2.id)
+                        .then(res => {
+                            chai.expect(res.status).to.equal(404, "Expected Status Code 404 Not Found - Model 1 Get Check");
+                            return res;
+                        })
+                    )
+                    .then(() => request
+                        .get(model1.id)
+                        .send()
+                        .then(res => {
+                            chai.expect(res.status).to.equal(404, "Expected Status Code 404 Not Found - Model 2 Get Check");
+                            return res;
+                        })
+                    )
+            )
+        });
     });
 });

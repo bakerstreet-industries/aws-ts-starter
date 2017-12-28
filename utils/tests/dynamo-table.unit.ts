@@ -61,98 +61,91 @@ describe('Dynamo Table Wrapper', () => {
         };
     });
 
-    it("Execute the Document delete method successfully", (done) => {
+    it("Execute the Document delete method successfully", () => {
         let result: any;
         mockDocumentClient.delete = (params: DocumentClient.DeleteItemInput, callback?: (err: AWSError, data: DocumentClient.DeleteItemOutput) => void): Request<DocumentClient.DeleteItemOutput, AWSError> => {
             result = "mock-delete";
             callback(null, result);
             return generateDummyRequest();
         };
-        dtw.delete({ "mock-key": "mock-val" }).then(() => {
+        return dtw.delete({ "mock-key": "mock-val" }).then(() => {
             chai.expect(result).to.equal("mock-delete");
-            done();
         });
     });
 
-    it("Execute the Document delete method unsuccessfully", (done) => {
+    it("Execute the Document delete method unsuccessfully", () => {
         mockDocumentClient.delete = (params: DocumentClient.DeleteItemInput, callback?: (err: AWSError, data: DocumentClient.DeleteItemOutput) => void): Request<DocumentClient.DeleteItemOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             err.message = "mock-delete-fail"
             callback(err, null);
             return generateDummyRequest();
         };
-        dtw.delete({ "mock-key": "mock-val" }).catch(reason => {
+        return dtw.delete({ "mock-key": "mock-val" }).catch(reason => {
             chai.expect(JSON.stringify(
                 reason
             )).to.equal(JSON.stringify(
                 LambdaError.deleteDataFailed({ message: "mock-delete-fail" })
             ));
-            done();
         });
     });
 
-    it("Execute the Document get method successfully", (done) => {
+    it("Execute the Document get method successfully", () => {
         mockDocumentClient.query = (params: DocumentClient.QueryInput, callback?: (err: AWSError, data: DocumentClient.QueryOutput) => void): Request<DocumentClient.QueryOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             callback(null, { Items: [{}] });
             return generateDummyRequest();
         };
-        dtw.get("", { "key": "val" }).then(data => {
+        return dtw.get("", { "key": "val" }).then(data => {
             chai.expect(JSON.stringify(data)).to.equal("[{}]");
-            done();
         });
     });
 
-    it("Execute the Document get method unsuccessfully with no Items Property", (done) => {
+    it("Execute the Document get method unsuccessfully with no Items Property", () => {
         mockDocumentClient.query = (params: DocumentClient.QueryInput, callback?: (err: AWSError, data: DocumentClient.QueryOutput) => void): Request<DocumentClient.QueryOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             callback(null, {});
             return generateDummyRequest();
         };
-        dtw.get("", { "key": "val" }).catch(reason => {
+        return dtw.get("", { "key": "val" }).catch(reason => {
             chai.expect(JSON.stringify(reason)).to.equal('{"statusCode":404,"message":"The object {\\"key\\":\\"val\\"} is not found","type":"notFound"}');
-            done();
         });
     });
 
-    it("Execute the Document get method unsuccessfully with no Items", (done) => {
+    it("Execute the Document get method unsuccessfully with no Items", () => {
         mockDocumentClient.query = (params: DocumentClient.QueryInput, callback?: (err: AWSError, data: DocumentClient.QueryOutput) => void): Request<DocumentClient.QueryOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             callback(null, { Items: [] });
             return generateDummyRequest();
         };
-        dtw.get("", { "key": "val" }).catch(reason => {
+        return dtw.get("", { "key": "val" }).catch(reason => {
             chai.expect(JSON.stringify(reason)).to.equal('{"statusCode":404,"message":"The object {\\"key\\":\\"val\\"} is not found","type":"notFound"}');
-            done();
         });
     });
 
-    it("Execute the Document get method unsuccessfully with AWSError", (done) => {
+    it("Execute the Document get method unsuccessfully with AWSError", () => {
         mockDocumentClient.query = (params: DocumentClient.QueryInput, callback?: (err: AWSError, data: DocumentClient.QueryOutput) => void): Request<DocumentClient.QueryOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             callback(err, null);
             return generateDummyRequest();
         };
-        dtw.get("", { "key": "val" }).catch(reason => {
+        return dtw.get("", { "key": "val" }).catch(reason => {
             chai.expect(JSON.stringify(reason)).to.equal('{"statusCode":404,"message":"The object {\\"key\\":\\"val\\"} is not found","type":"notFound"}');
-            done();
         });
     });
 
-    it("Should not add a createTime property to the incoming object when addTimestamps is true", (done) => {
+    it("Should not add a createTime property to the incoming object when addTimestamps is true", () => {
         mockDocumentClient.put = (params: DocumentClient.PutItemInput, callback?: (err: AWSError, data: DocumentClient.PutItemOutput) => void): Request<DocumentClient.PutItemOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             callback(null, params.Item);
             return generateDummyRequest();
         };
         settings.table.addTimestamps = false;
-        dtw.put({ "key": "val" }).then(data => {
+        return dtw.put({ "key": "val" }).then(data => {
             chai.expect(JSON.stringify(data)).to.equal('{"key":"val"}');
-            done();
         });
     });
 
-    it("Should add a createTime property to the incoming object when addTimestamps is true", (done) => {
+    it("Should add a createTime property to the incoming object when addTimestamps is true", () => {
         mockDocumentClient.put = (params: DocumentClient.PutItemInput, callback?: (err: AWSError, data: DocumentClient.PutItemOutput) => void): Request<DocumentClient.PutItemOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             //New create time values are always set to Date.now(), which will never pass a test looking for a static time
@@ -160,13 +153,12 @@ describe('Dynamo Table Wrapper', () => {
             callback(null, params.Item);
             return generateDummyRequest();
         };
-        dtw.put({ "key": "val" }).then(data => {
+        return dtw.put({ "key": "val" }).then(data => {
             chai.expect(JSON.stringify(data)).to.equal('{"key":"val","createTime":1514312897594}');
-            done();
         });
     });
 
-    it("Should add an updateTime property to the incoming object when addTimestamps is true and a createTime property already exists", (done) => {
+    it("Should add an updateTime property to the incoming object when addTimestamps is true and a createTime property already exists", () => {
         mockDocumentClient.put = (params: DocumentClient.PutItemInput, callback?: (err: AWSError, data: DocumentClient.PutItemOutput) => void): Request<DocumentClient.PutItemOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             //New update time values are always set to Date.now(), which will never pass a test looking for a static time
@@ -174,27 +166,25 @@ describe('Dynamo Table Wrapper', () => {
             callback(null, params.Item);
             return generateDummyRequest();
         };
-        dtw.put({ "key": "val", "createTime": 1514312897594 }).then(data => {
+        return dtw.put({ "key": "val", "createTime": 1514312897594 }).then(data => {
             chai.expect(JSON.stringify(data)).to.equal('{"key":"val","createTime":1514312897594,"updateTime":1514313438713}');
-            done();
         });
     });
 
-    it("Should catch and reject with a wrapped AWS error on a put failure from the Document Client", (done) => {
+    it("Should catch and reject with a wrapped AWS error on a put failure from the Document Client", () => {
         mockDocumentClient.put = (params: DocumentClient.PutItemInput, callback?: (err: AWSError, data: DocumentClient.PutItemOutput) => void): Request<DocumentClient.PutItemOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             err.message = "sample-put-error";
             callback(err, null);
             return generateDummyRequest();
         };
-        dtw.put({ "key": "val", "createTime": 1514312897594 }).catch(reason => {
+        return dtw.put({ "key": "val", "createTime": 1514312897594 }).catch(reason => {
             chai.expect(reason instanceof LambdaError).to.be.true;
             chai.expect(JSON.stringify(reason)).to.equal('{"statusCode":500,"message":"sample-put-error","type":"putFailed"}');
-            done();
         });
     });
 
-    it("Should add property fields to the incoming object when idFields are set on the settings object and no id field already exists", (done) => {
+    it("Should add property fields to the incoming object when idFields are set on the settings object and no id field already exists", () => {
         mockDocumentClient.put = (params: DocumentClient.PutItemInput, callback?: (err: AWSError, data: DocumentClient.PutItemOutput) => void): Request<DocumentClient.PutItemOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             //New id values are always generated with a new uuid, which will never pass a test looking for a static id values
@@ -205,13 +195,12 @@ describe('Dynamo Table Wrapper', () => {
         };
         settings.table.addTimestamps = false;
         settings.table.idFields = ["sample", "id"];
-        dtw.put({ "key": "val" }).then(data => {
+        return dtw.put({ "key": "val" }).then(data => {
             chai.expect(JSON.stringify(data)).to.equal('{"key":"val","sample":"cd965b00-ea6c-11e7-966b-b13b8d801f06","id":"cd965b01-ea6c-11e7-966b-b13b8d801f06"}');
-            done();
         });
     });
 
-    it("Should add property fields to the incoming object when idFields are set on the settings object and no id field already exists", (done) => {
+    it("Should add property fields to the incoming object when idFields are set on the settings object and no id field already exists", () => {
         mockDocumentClient.put = (params: DocumentClient.PutItemInput, callback?: (err: AWSError, data: DocumentClient.PutItemOutput) => void): Request<DocumentClient.PutItemOutput, AWSError> => {
             chai.expect(params.TableName).to.equal("blah");
             //New id values are always generated with a new uuid, which will never pass a test looking for a static id values
@@ -221,9 +210,8 @@ describe('Dynamo Table Wrapper', () => {
         };
         settings.table.addTimestamps = false;
         settings.table.idFields = ["sample", "id"];
-        dtw.put({ "key": "val", "sample": "muwahaha" }).then(data => {
+        return dtw.put({ "key": "val", "sample": "muwahaha" }).then(data => {
             chai.expect(JSON.stringify(data)).to.equal('{"key":"val","sample":"muwahaha","id":"cd965b01-ea6c-11e7-966b-b13b8d801f06"}');
-            done();
         });
     });
 
