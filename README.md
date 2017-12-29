@@ -12,5 +12,31 @@
 * 100% unit test coverage of all boilerplate module code to encourage BDD/TDD
 * Fully functional end-to-end testing of the specified API via a Serverless YAML
 * A default Repository implementation against a Dynamo DB
+* An AWS handler wrapper that takes care of the API Gateway callback and error handling, either by thrown errors or by caught promises
 
 ## Setup
+
+1. Fork / Clone this repository
+2. `npm install`
+3. Replace `module` and `Module` with the name of your api
+    a. e.g. `ModuleService` => `PetService`; `ModuleRepo` => `PetRepo`
+4. Install the AWS CLI - `npm install -g aws`
+5. Install the Serverless CLI - `npm install -g serverless`
+6. Configure your AWS CLI - `aws configure`
+
+TODO: Serverless Generator
+
+### Integrate with Travis CI
+
+A .travis.yml file is already included for you. If you do not have a Travis CI account, go [here](https://travis-ci.org/). Once registered, activate your repository, navigate to settings, and add the following Environment Variables:
+
+1. `AWS_ACCESS_KEY_ID`
+2. `AWS_SECRET_ACCESS_KEY`
+
+This seed uses AWS as the provider by default and these credentials are used to deploy and run your serverless application.
+
+### Integrate with Coveralls
+
+A public place to display code coverage of your API. Add this Environment Variable to your Travis CI repository's settings:
+
+1. `repo_token` - Coveralls token for uploading code coverage report
