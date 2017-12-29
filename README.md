@@ -40,3 +40,7 @@ This seed uses AWS as the provider by default and these credentials are used to 
 A public place to display code coverage of your API. Add this Environment Variable to your Travis CI repository's settings:
 
 1. `repo_token` - Coveralls token for uploading code coverage report
+
+## Running the tests
+
+Unit tests can be run via `npm test`. If you have never run the end to end tests, or have code changes that need to be deployed before running the end to end tests, use `npm run test:e2e:deploy`, otherwise to execute the end to end tests of what is deployed to your serverless provider, use `npm run test:e2e`.
