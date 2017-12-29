@@ -5,7 +5,7 @@ import catchChaiAssertionFailures from "../../utils/tests/chai-assertion-catch";
 
 // NOTE: Make sure the URL ends with a trailing slash
 // npm run test:e2e
-const request = agent("https://at7a42uib6.execute-api.us-east-1.amazonaws.com/dev/module/");
+const request = agent("[[ENDPOINT]]");
 
 
 function createModel(data: IModel): Promise<IModel> {
