@@ -19,7 +19,7 @@
 1. Fork / Clone this repository
 2. `npm install`
 3. Replace `module` and `Module` with the name of your api
-    a. e.g. `ModuleService` => `PetService`; `ModuleRepo` => `PetRepo`
+    * e.g. `ModuleService` => `PetService`; `ModuleRepo` => `PetRepo`
 4. Install the AWS CLI - `npm install -g aws`
 5. Install the Serverless CLI - `npm install -g serverless`
 6. Configure your AWS CLI - `aws configure`
