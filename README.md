@@ -1,5 +1,6 @@
 # AWS Typescript Starter
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ec75304a9b8b494aaa6cf821e106ddb3)](https://www.codacy.com/app/Roustalski/aws-ts-starter?utm_source=github.com&utm_medium=referral&utm_content=bakerstreet-industries/aws-ts-starter&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/bakerstreet-industries/aws-ts-starter.svg?branch=master)](https://travis-ci.org/bakerstreet-industries/aws-ts-starter)
 [![Coverage Status](https://coveralls.io/repos/github/bakerstreet-industries/aws-ts-starter/badge.svg?branch=master)](https://coveralls.io/github/bakerstreet-industries/aws-ts-starter?branch=master)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
