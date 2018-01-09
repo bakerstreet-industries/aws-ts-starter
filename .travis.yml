@@ -7,7 +7,7 @@ cache:
 
 script:
     - npm install
-    - npm run test:e2e:deploy
+    - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run test:e2e:deploy; fi'
     - npm test
 
 after_script: nyc report --reporter=text-lcov | coveralls
